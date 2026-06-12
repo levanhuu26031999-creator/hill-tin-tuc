@@ -1,0 +1,41 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { CATEGORIES, getCategoryLabel, type CategorySlug } from '../../lib/categories';
+
+export async function getStaticPaths() {
+	const paths: {
+		params: { category: CategorySlug; slug: string };
+		props: { article: CollectionEntry<CategorySlug> };
+	}[] = [];
+
+	for (const cat of CATEGORIES) {
+		const articles = await getCollection(cat.slug);
+		for (const article of articles) {
+			paths.push({
+				params: { category: cat.slug, slug: article.id },
+				props: { article },
+			});
+		}
+	}
+
+	return paths;
+}
+
+const { category } = Astro.params as { category: CategorySlug };
+const { article } = Astro.props;
+const { Content } = await render(article);
+const { title, date, source, sourceUrl } = article.data;
+---
+
+<BaseLayout title={title}>
+	<a class="back" href={`/${category}/`}>← {getCategoryLabel(category)}</a>
+	<h1>{title}</h1>
+	<p class="article-meta">{date.toLocaleDateString('vi-VN')} · {source}</p>
+	<div class="article-content">
+		<Content />
+	</div>
+	<div class="source-box">
+		Nguồn: <a href={sourceUrl} target="_blank" rel="noopener noreferrer">{source}</a>
+	</div>
+</BaseLayout>

@@ -1,17 +1,40 @@
 ---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import { CATEGORIES } from '../lib/categories';
 
+const allArticles = (
+	await Promise.all(
+		CATEGORIES.map(async (cat) => {
+			const items = await getCollection(cat.slug);
+			return items.map((item) => ({ ...item, category: cat.slug }));
+		})
+	)
+).flat();
+
+allArticles.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="Hill Tin Tức">
+	<h1>Hill Tin Tức</h1>
+	<p class="tagline">Tin tức tổng hợp: AI · Marketing · Edit Video · Kinh doanh online</p>
+	{
+		allArticles.length === 0 ? (
+			<p>Chưa có bài viết.</p>
+		) : (
+			<div class="grid">
+				{allArticles.map((article) => (
+					<ArticleCard
+						id={article.id}
+						category={article.category}
+						title={article.data.title}
+						date={article.data.date}
+						source={article.data.source}
+						summary={article.data.summary}
+					/>
+				))}
+			</div>
+		)
+	}
+</BaseLayout>

@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { CATEGORIES, getCategoryLabel, type CategorySlug } from '../../lib/categories';
+
+export function getStaticPaths() {
+	return CATEGORIES.map((cat) => ({ params: { category: cat.slug } }));
+}
+
+const { category } = Astro.params as { category: CategorySlug };
+const articles = (await getCollection(category)).sort(
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<BaseLayout title={getCategoryLabel(category)}>
+	<h1>{getCategoryLabel(category)}</h1>
+	{
+		articles.length === 0 ? (
+			<p>Chưa có bài viết trong mục này.</p>
+		) : (
+			<div class="grid">
+				{articles.map((article) => (
+					<ArticleCard
+						id={article.id}
+						category={category}
+						title={article.data.title}
+						date={article.data.date}
+						source={article.data.source}
+						summary={article.data.summary}
+					/>
+				))}
+			</div>
+		)
+	}
+</BaseLayout>

@@ -1,0 +1,51 @@
+---
+import '../styles/global.css';
+import { CATEGORIES } from '../lib/categories';
+
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const {
+	title,
+	description = 'Tin tức tổng hợp: AI, Marketing, Edit Video, Kinh doanh online.',
+} = Astro.props;
+
+const pageTitle = title === 'Hill Tin Tức' ? title : `${title} — Hill Tin Tức`;
+---
+
+<!doctype html>
+<html lang="vi">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content={description} />
+		<meta name="generator" content={Astro.generator} />
+		<title>{pageTitle}</title>
+	</head>
+	<body>
+		<header class="site-header">
+			<div class="container header-inner">
+				<a class="logo" href="/">Hill Tin Tức</a>
+				<nav>
+					{CATEGORIES.map((cat) => (
+						<a href={`/${cat.slug}/`}>{cat.label}</a>
+					))}
+				</nav>
+			</div>
+		</header>
+		<main class="container">
+			<slot />
+		</main>
+		<footer class="site-footer">
+			<div class="container">
+				<p>
+					Hill Tin Tức — tổng hợp &amp; biên tập lại tin AI, Marketing, Edit Video, Kinh
+					doanh online. Mỗi bài đều dẫn nguồn gốc.
+				</p>
+			</div>
+		</footer>
+	</body>
+</html>

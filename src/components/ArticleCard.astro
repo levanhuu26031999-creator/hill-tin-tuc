@@ -1,0 +1,24 @@
+---
+import { getCategoryLabel } from '../lib/categories';
+
+interface Props {
+	id: string;
+	category: string;
+	title: string;
+	date: Date;
+	source: string;
+	summary: string;
+}
+
+const { id, category, title, date, source, summary } = Astro.props;
+---
+
+<a class="card" href={`/${category}/${id}/`}>
+	<span class={`badge ${category}`}>{getCategoryLabel(category)}</span>
+	<h2>{title}</h2>
+	<p class="summary">{summary}</p>
+	<div class="meta">
+		<time datetime={date.toISOString()}>{date.toLocaleDateString('vi-VN')}</time>
+		<span> · {source}</span>
+	</div>
+</a>
