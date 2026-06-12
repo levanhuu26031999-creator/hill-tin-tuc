@@ -40,8 +40,49 @@ const pageTitle = title === 'Hill Tin Tức' ? title : `${title} — Hill Tin T�
 			<slot />
 		</main>
 		<footer class="site-footer">
-			<div class="container">
-				<p>
+			<div class="container footer-inner">
+				<div class="author-bio">
+					<img src="/avatar.svg" alt="Lê Văn Hửu - Hill Media" class="avatar" width="56" height="56" />
+					<div>
+						<p class="author-name">Lê Văn Hửu — Hill Media</p>
+						<p class="author-tagline">
+							Tổng hợp &amp; biên tập tin AI, Marketing, Edit Video, Kinh doanh online
+						</p>
+						<div class="social-links">
+							<a
+								href="https://www.facebook.com/levanhuu260399/"
+								target="_blank"
+								rel="noopener noreferrer"
+								aria-label="Facebook"
+							>
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+									<path d="M22 12a10 10 0 1 0-11.6 9.88v-6.99H7.9V12h2.5V9.8c0-2.46 1.46-3.82 3.7-3.82 1.07 0 2.2.19 2.2.19v2.43h-1.24c-1.22 0-1.6.76-1.6 1.54V12h2.73l-.44 2.89h-2.29v6.99A10 10 0 0 0 22 12z"/>
+								</svg>
+							</a>
+							<a
+								href="https://www.tiktok.com/@congnhanedit?lang=vi-VN"
+								target="_blank"
+								rel="noopener noreferrer"
+								aria-label="TikTok"
+							>
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+									<path d="M14.5 2h2.7c.2 1.9 1.4 3.5 3.3 3.9v2.7c-1.4.1-2.7-.3-3.9-1.1v5.6c0 2.9-2.4 5.3-5.3 5.3S5.9 16 5.9 13.1s2.4-5.3 5.3-5.3c.3 0 .6 0 .9.1v2.7a2.6 2.6 0 1 0 2.4 2.6V2z"/>
+								</svg>
+							</a>
+							<a
+								href="https://www.youtube.com/@Congnhanedit"
+								target="_blank"
+								rel="noopener noreferrer"
+								aria-label="YouTube"
+							>
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+									<path d="M23.5 6.9s-.2-1.6-.9-2.3c-.9-.9-1.9-.9-2.4-1C16.9 3.3 12 3.3 12 3.3s-4.9 0-8.2.3c-.5.1-1.5.1-2.4 1-.7.7-.9 2.3-.9 2.3S.2 8.8.2 10.7v1.6c0 1.9.2 3.8.2 3.8s.2 1.6.9 2.3c.9.9 2.1.8 2.6.9 1.9.2 8.1.3 8.1.3s4.9 0 8.2-.3c.5-.1 1.5-.1 2.4-1 .7-.7.9-2.3.9-2.3s.2-1.9.2-3.8v-1.6c0-1.9-.2-3.8-.2-3.8zM9.7 14.6V8.9l5.8 2.9-5.8 2.8z"/>
+								</svg>
+							</a>
+						</div>
+					</div>
+				</div>
+				<p class="footer-disclosure">
 					Hill Tin Tức — tổng hợp &amp; biên tập lại tin AI, Marketing, Edit Video, Kinh
 					doanh online. Mỗi bài đều dẫn nguồn gốc.
 				</p>
