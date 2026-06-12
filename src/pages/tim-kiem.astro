@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Tìm kiếm">
+	<link rel="stylesheet" href="/pagefind/pagefind-ui.css" slot="head" />
+	<h1>Tìm kiếm</h1>
+	<p class="tagline">Tìm bài viết trên Hill Tin Tức theo từ khóa.</p>
+	<div id="search"></div>
+	<script is:inline src="/pagefind/pagefind-ui.js"></script>
+	<script is:inline>
+		if (typeof PagefindUI !== 'undefined') {
+			new PagefindUI({ element: '#search', showSubResults: true, showImages: false });
+		} else {
+			document.getElementById('search').innerHTML =
+				'<p>Tìm kiếm chỉ hoạt động trên bản đã build (sau khi chạy <code>npm run build</code>).</p>';
+		}
+	</script>
+</BaseLayout>

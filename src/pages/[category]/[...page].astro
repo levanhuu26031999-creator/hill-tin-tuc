@@ -1,27 +1,38 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, type GetStaticPathsOptions } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ArticleCard from '../../components/ArticleCard.astro';
+import Pagination from '../../components/Pagination.astro';
 import { CATEGORIES, getCategoryLabel, type CategorySlug } from '../../lib/categories';
 
-export function getStaticPaths() {
-	return CATEGORIES.map((cat) => ({ params: { category: cat.slug } }));
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+	const paths = [];
+	for (const cat of CATEGORIES) {
+		const articles = (await getCollection(cat.slug)).sort(
+			(a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+		);
+		paths.push(
+			...paginate(articles, {
+				params: { category: cat.slug },
+				pageSize: 9,
+			})
+		);
+	}
+	return paths;
 }
 
 const { category } = Astro.params as { category: CategorySlug };
-const articles = (await getCollection(category)).sort(
-	(a, b) => b.data.date.valueOf() - a.data.date.valueOf()
-);
+const { page } = Astro.props;
 ---
 
 <BaseLayout title={getCategoryLabel(category)}>
 	<h1>{getCategoryLabel(category)}</h1>
 	{
-		articles.length === 0 ? (
+		page.data.length === 0 ? (
 			<p>Chưa có bài viết trong mục này.</p>
 		) : (
 			<div class="grid">
-				{articles.map((article) => (
+				{page.data.map((article) => (
 					<ArticleCard
 						id={article.id}
 						category={category}
@@ -34,4 +45,5 @@ const articles = (await getCollection(category)).sort(
 			</div>
 		)
 	}
+	<Pagination page={page} />
 </BaseLayout>

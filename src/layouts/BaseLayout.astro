@@ -26,6 +26,14 @@ const ogImageURL = new URL(image, Astro.site);
 <!doctype html>
 <html lang="vi">
 	<head>
+		<script is:inline>
+			(function () {
+				var theme = localStorage.getItem('theme');
+				if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+					document.documentElement.dataset.theme = 'dark';
+				}
+			})();
+		</script>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" type="image/x-icon" href="/favicon.ico" />
@@ -64,10 +72,19 @@ const ogImageURL = new URL(image, Astro.site);
 						<a href={`/${cat.slug}/`}>{cat.label}</a>
 					))}
 					<a href="/tags/">Thẻ</a>
+					<a href="/tim-kiem/">Tìm kiếm</a>
 				</nav>
+				<button class="theme-toggle" type="button" aria-label="Chuyển giao diện sáng/tối">
+					<svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+						<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" />
+					</svg>
+					<svg class="icon-sun" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+						<path d="M12 4a1 1 0 0 1-1-1V1a1 1 0 1 1 2 0v2a1 1 0 0 1-1 1Zm0 19a1 1 0 0 1-1-1v-2a1 1 0 1 1 2 0v2a1 1 0 0 1-1 1ZM4.22 5.64a1 1 0 0 1-1.41-1.42l1.41-1.41a1 1 0 1 1 1.42 1.41ZM19.78 21.19a1 1 0 0 1-1.41-1.41l1.41-1.42a1 1 0 1 1 1.42 1.42ZM1 13a1 1 0 0 1 0-2h2a1 1 0 1 1 0 2Zm20 0a1 1 0 0 1 0-2h2a1 1 0 1 1 0 2ZM4.22 18.36 2.81 19.78a1 1 0 0 0 1.41 1.41l1.42-1.41a1 1 0 0 0-1.42-1.42ZM19.78 2.81l-1.41 1.42a1 1 0 0 0 1.41 1.41l1.42-1.41a1 1 0 0 0-1.42-1.42ZM12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12Z" />
+					</svg>
+				</button>
 			</div>
 		</header>
-		<main class="container">
+		<main class="container" data-pagefind-body>
 			<slot />
 		</main>
 		<footer class="site-footer">
@@ -119,5 +136,18 @@ const ogImageURL = new URL(image, Astro.site);
 				</p>
 			</div>
 		</footer>
+		<script>
+			const themeToggle = document.querySelector<HTMLButtonElement>('.theme-toggle');
+			themeToggle?.addEventListener('click', () => {
+				const isDark = document.documentElement.dataset.theme === 'dark';
+				if (isDark) {
+					delete document.documentElement.dataset.theme;
+					localStorage.setItem('theme', 'light');
+				} else {
+					document.documentElement.dataset.theme = 'dark';
+					localStorage.setItem('theme', 'dark');
+				}
+			});
+		</script>
 	</body>
 </html>

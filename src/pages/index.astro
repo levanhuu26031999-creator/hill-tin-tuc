@@ -1,40 +1,56 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
-import { CATEGORIES } from '../lib/categories';
+import { CATEGORIES, getCategoryLabel } from '../lib/categories';
+import { getAllArticles } from '../lib/tags';
 
-const allArticles = (
-	await Promise.all(
-		CATEGORIES.map(async (cat) => {
-			const items = await getCollection(cat.slug);
-			return items.map((item) => ({ ...item, category: cat.slug }));
-		})
-	)
-).flat();
+const allArticles = (await getAllArticles()).sort(
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
 
-allArticles.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const [featured, ...rest] = allArticles;
+const tagline = CATEGORIES.map((cat) => cat.label).join(' · ');
 ---
 
 <BaseLayout title="Hill Tin Tức">
 	<h1>Hill Tin Tức</h1>
-	<p class="tagline">Tin tức tổng hợp: AI · Marketing · Edit Video · Kinh doanh online</p>
+	<p class="tagline">Tin tức tổng hợp: {tagline}</p>
 	{
-		allArticles.length === 0 ? (
+		!featured ? (
 			<p>Chưa có bài viết.</p>
 		) : (
-			<div class="grid">
-				{allArticles.map((article) => (
-					<ArticleCard
-						id={article.id}
-						category={article.category}
-						title={article.data.title}
-						date={article.data.date}
-						source={article.data.source}
-						summary={article.data.summary}
-					/>
-				))}
-			</div>
+			<>
+				<a class="featured" href={`/${featured.category}/${featured.id}/`}>
+					<span class={`badge ${featured.category}`}>{getCategoryLabel(featured.category)}</span>
+					<h2>{featured.data.title}</h2>
+					<p class="summary">{featured.data.summary}</p>
+					<div class="meta">
+						<time datetime={featured.data.date.toISOString()}>
+							{featured.data.date.toLocaleDateString('vi-VN')}
+						</time>
+						<span> · {featured.data.source}</span>
+					</div>
+					<span class="read-more">Đọc tiếp →</span>
+				</a>
+
+				{rest.length > 0 && (
+					<>
+						<h2 class="section-heading">Mới nhất</h2>
+						<div class="grid">
+							{rest.map((article) => (
+								<ArticleCard
+									id={article.id}
+									category={article.category}
+									title={article.data.title}
+									date={article.data.date}
+									source={article.data.source}
+									summary={article.data.summary}
+								/>
+							))}
+						</div>
+					</>
+				)}
+			</>
 		)
 	}
 </BaseLayout>
