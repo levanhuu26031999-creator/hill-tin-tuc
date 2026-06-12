@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getAllArticles, getAllTags, slugifyTag } from '../../lib/tags';
+
+const articles = await getAllArticles();
+const labels = await getAllTags();
+
+const counts = new Map<string, number>();
+for (const article of articles) {
+	for (const tag of article.data.tags ?? []) {
+		const slug = slugifyTag(tag);
+		counts.set(slug, (counts.get(slug) ?? 0) + 1);
+	}
+}
+
+const tags = [...labels.entries()]
+	.map(([slug, label]) => ({ slug, label, count: counts.get(slug) ?? 0 }))
+	.sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'vi'));
+---
+
+<BaseLayout title="Tất cả thẻ">
+	<h1>Tất cả thẻ</h1>
+	{
+		tags.length === 0 ? (
+			<p>Chưa có thẻ nào.</p>
+		) : (
+			<div class="tag-list">
+				{tags.map((tag) => (
+					<a class="tag" href={`/tags/${tag.slug}/`}>
+						{tag.label} <span class="tag-count">{tag.count}</span>
+					</a>
+				))}
+			</div>
+		)
+	}
+</BaseLayout>

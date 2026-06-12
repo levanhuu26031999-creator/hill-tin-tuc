@@ -21,4 +21,5 @@ export const collections = {
 	marketing: articleCollection('marketing'),
 	'edit-video': articleCollection('edit-video'),
 	'kinh-doanh-online': articleCollection('kinh-doanh-online'),
+	'xu-huong-kenh': articleCollection('xu-huong-kenh'),
 };

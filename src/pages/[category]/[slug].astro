@@ -1,7 +1,9 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
 import { CATEGORIES, getCategoryLabel, type CategorySlug } from '../../lib/categories';
+import { getAllArticles, slugifyTag } from '../../lib/tags';
 
 export async function getStaticPaths() {
 	const paths: {
@@ -25,7 +27,7 @@ export async function getStaticPaths() {
 const { category } = Astro.params as { category: CategorySlug };
 const { article } = Astro.props;
 const { Content } = await render(article);
-const { title, date, source, sourceUrl, summary } = article.data;
+const { title, date, source, sourceUrl, summary, tags } = article.data;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const jsonLd = {
@@ -38,6 +40,22 @@ const jsonLd = {
 	publisher: { '@type': 'Organization', name: 'Hill Tin Tức' },
 	mainEntityOfPage: canonicalURL.toString(),
 };
+
+const related = (await getAllArticles())
+	.filter((a) => !(a.category === category && a.id === article.id))
+	.map((a) => {
+		let score = a.category === category ? 1 : 0;
+		for (const tag of tags ?? []) {
+			if ((a.data.tags ?? []).includes(tag)) score += 1;
+		}
+		return { article: a, score };
+	})
+	.filter((entry) => entry.score > 0)
+	.sort(
+		(x, y) => y.score - x.score || y.article.data.date.valueOf() - x.article.data.date.valueOf()
+	)
+	.slice(0, 3)
+	.map((entry) => entry.article);
 ---
 
 <BaseLayout title={title} description={summary} type="article" publishedTime={date}>
@@ -48,7 +66,37 @@ const jsonLd = {
 	<div class="article-content">
 		<Content />
 	</div>
+	{
+		tags && tags.length > 0 && (
+			<div class="tag-list">
+				{tags.map((tag) => (
+					<a class="tag" href={`/tags/${slugifyTag(tag)}/`}>
+						{tag}
+					</a>
+				))}
+			</div>
+		)
+	}
 	<div class="source-box">
 		Nguồn: <a href={sourceUrl} target="_blank" rel="noopener noreferrer">{source}</a>
 	</div>
+	{
+		related.length > 0 && (
+			<div class="related">
+				<h2>Bài viết liên quan</h2>
+				<div class="grid">
+					{related.map((a) => (
+						<ArticleCard
+							id={a.id}
+							category={a.category}
+							title={a.data.title}
+							date={a.data.date}
+							source={a.data.source}
+							summary={a.data.summary}
+						/>
+					))}
+				</div>
+			</div>
+		)
+	}
 </BaseLayout>

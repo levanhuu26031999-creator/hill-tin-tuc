@@ -63,6 +63,7 @@ const ogImageURL = new URL(image, Astro.site);
 					{CATEGORIES.map((cat) => (
 						<a href={`/${cat.slug}/`}>{cat.label}</a>
 					))}
+					<a href="/tags/">Thẻ</a>
 				</nav>
 			</div>
 		</header>

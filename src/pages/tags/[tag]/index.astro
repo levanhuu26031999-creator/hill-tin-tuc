@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ArticleCard from '../../../components/ArticleCard.astro';
+import { getAllArticles, getAllTags, slugifyTag } from '../../../lib/tags';
+
+export async function getStaticPaths() {
+	const labels = await getAllTags();
+	return [...labels.entries()].map(([slug, label]) => ({
+		params: { tag: slug },
+		props: { label },
+	}));
+}
+
+const { tag } = Astro.params as { tag: string };
+const { label } = Astro.props as { label: string };
+
+const articles = (await getAllArticles())
+	.filter((article) => (article.data.tags ?? []).some((t) => slugifyTag(t) === tag))
+	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title={`#${label}`}>
+	<a class="back" href="/tags/">← Tất cả thẻ</a>
+	<h1>#{label}</h1>
+	{
+		articles.length === 0 ? (
+			<p>Chưa có bài viết với thẻ này.</p>
+		) : (
+			<div class="grid">
+				{articles.map((article) => (
+					<ArticleCard
+						id={article.id}
+						category={article.category}
+						title={article.data.title}
+						date={article.data.date}
+						source={article.data.source}
+						summary={article.data.summary}
+					/>
+				))}
+			</div>
+		)
+	}
+</BaseLayout>
