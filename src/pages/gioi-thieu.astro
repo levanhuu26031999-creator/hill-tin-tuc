@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { CATEGORIES } from '../lib/categories';
+---
+
+<BaseLayout
+	title="Giới thiệu"
+	description="Hill Tin Tức tổng hợp & biên tập tin AI, Marketing, Edit Video, Kinh doanh online — mỗi bài đều dẫn nguồn gốc rõ ràng."
+>
+	<h1>Về Hill Tin Tức</h1>
+	<p class="tagline">Tin tức tổng hợp, viết lại bằng góc nhìn riêng — không copy, luôn dẫn nguồn.</p>
+
+	<section class="about-section">
+		<h2>Hill Tin Tức là gì?</h2>
+		<p>
+			Hill Tin Tức tổng hợp và biên tập lại những tin đáng chú ý trong 5 mảng: {
+				CATEGORIES.map((c) => c.label).join(', ')
+			}. Mỗi bài được viết lại hoàn toàn bằng văn phong riêng, kèm phân tích hoặc góc nhìn thực
+			tế — không chỉ dịch hay copy nguyên văn từ báo gốc.
+		</p>
+	</section>
+
+	<section class="about-section">
+		<h2>Người biên tập</h2>
+		<div class="author-bio">
+			<img src="/avatar.png" alt="Lê Văn Hửu - Hill Media" class="avatar" width="56" height="56" />
+			<div>
+				<p class="author-name">Lê Văn Hửu — Hill Media</p>
+				<p class="author-tagline">
+					Video editor &amp; trainer — chia sẻ kiến thức AI, Marketing, Edit Video và kinh doanh
+					online cho người Việt.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="about-section">
+		<h2>Nguyên tắc biên tập</h2>
+		<ul class="about-list">
+			<li>Mọi bài viết đều có dòng dẫn nguồn gốc rõ ràng ở cuối bài.</li>
+			<li>Nội dung được viết lại hoàn toàn bằng ngôn ngữ riêng, không copy nguyên văn từ bài gốc.</li>
+			<li>Mỗi bài có ít nhất một góc nhìn hoặc phân tích thực tế, không chỉ tóm tắt lại tin.</li>
+			<li>Chỉ tổng hợp từ các nguồn công khai, được phép trích dẫn lại.</li>
+		</ul>
+	</section>
+
+	<section class="about-section" id="khoa-hoc-capcut">
+		<h2>Khóa học CapCut — Từ công nhân thành Editor</h2>
+		<p>
+			Bên cạnh Hill Tin Tức, mình (Hill Media) cũng hướng dẫn edit video bằng CapCut — từ cơ bản
+			đến nhận dự án, dành cho người mới hoàn toàn. Quan tâm khóa học hoặc cần tư vấn lộ trình,
+			để lại lời nhắn qua các kênh dưới đây nhé.
+		</p>
+		<div class="btn-row">
+			<a class="btn" href="https://www.facebook.com/levanhuu260399/" target="_blank" rel="noopener noreferrer">
+				Facebook
+			</a>
+			<a class="btn" href="https://www.youtube.com/@Congnhanedit" target="_blank" rel="noopener noreferrer">
+				YouTube
+			</a>
+		</div>
+	</section>
+
+	<section class="about-section">
+		<h2>Liên hệ</h2>
+		<p>
+			Góp ý, báo lỗi nội dung, hoặc hợp tác — liên hệ qua
+			<a href="https://www.facebook.com/levanhuu260399/" target="_blank" rel="noopener noreferrer">Facebook</a>
+			hoặc <a href="https://www.tiktok.com/@congnhanedit?lang=vi-VN" target="_blank" rel="noopener noreferrer">TikTok</a>.
+		</p>
+	</section>
+</BaseLayout>

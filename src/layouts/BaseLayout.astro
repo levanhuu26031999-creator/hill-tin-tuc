@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { CATEGORIES } from '../lib/categories';
+import Newsletter from '../components/Newsletter.astro';
 
 interface Props {
 	title: string;
@@ -61,6 +62,25 @@ const ogImageURL = new URL(image, Astro.site);
 		<meta name="twitter:description" content={description} />
 		<meta name="twitter:image" content={ogImageURL} />
 
+		{
+			import.meta.env.PUBLIC_GA_ID && (
+				<>
+					<script
+						async
+						src={`https://www.googletagmanager.com/gtag/js?id=${import.meta.env.PUBLIC_GA_ID}`}
+					/>
+					<script is:inline define:vars={{ GA_ID: import.meta.env.PUBLIC_GA_ID }}>
+						window.dataLayer = window.dataLayer || [];
+						function gtag() {
+							window.dataLayer.push(arguments);
+						}
+						gtag('js', new Date());
+						gtag('config', GA_ID);
+					</script>
+				</>
+			)
+		}
+
 		<slot name="head" />
 	</head>
 	<body>
@@ -73,6 +93,7 @@ const ogImageURL = new URL(image, Astro.site);
 					))}
 					<a href="/tags/">Thẻ</a>
 					<a href="/tim-kiem/">Tìm kiếm</a>
+					<a href="/gioi-thieu/">Giới thiệu</a>
 				</nav>
 				<button class="theme-toggle" type="button" aria-label="Chuyển giao diện sáng/tối">
 					<svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -87,6 +108,9 @@ const ogImageURL = new URL(image, Astro.site);
 		<main class="container" data-pagefind-body>
 			<slot />
 		</main>
+		<div class="container">
+			<Newsletter />
+		</div>
 		<footer class="site-footer">
 			<div class="container footer-inner">
 				<div class="author-bio">

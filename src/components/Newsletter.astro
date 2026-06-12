@@ -1,0 +1,16 @@
+---
+const action = import.meta.env.PUBLIC_NEWSLETTER_ACTION;
+---
+
+{
+	action && (
+		<form class="newsletter" action={action} method="post" target="_blank" rel="noopener">
+			<h2>Nhận tin mới mỗi tuần</h2>
+			<p>Tổng hợp AI, Marketing, Edit Video, Kinh doanh online — gửi thẳng vào email của bạn.</p>
+			<div class="newsletter-row">
+				<input type="email" name="email" placeholder="Email của bạn" required />
+				<button type="submit">Đăng ký</button>
+			</div>
+		</form>
+	)
+}
