@@ -25,10 +25,23 @@ export async function getStaticPaths() {
 const { category } = Astro.params as { category: CategorySlug };
 const { article } = Astro.props;
 const { Content } = await render(article);
-const { title, date, source, sourceUrl } = article.data;
+const { title, date, source, sourceUrl, summary } = article.data;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'Article',
+	headline: title,
+	description: summary,
+	datePublished: date.toISOString(),
+	author: { '@type': 'Person', name: 'Lê Văn Hửu' },
+	publisher: { '@type': 'Organization', name: 'Hill Tin Tức' },
+	mainEntityOfPage: canonicalURL.toString(),
+};
 ---
 
-<BaseLayout title={title}>
+<BaseLayout title={title} description={summary} type="article" publishedTime={date}>
+	<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
 	<a class="back" href={`/${category}/`}>← {getCategoryLabel(category)}</a>
 	<h1>{title}</h1>
 	<p class="article-meta">{date.toLocaleDateString('vi-VN')} · {source}</p>
