@@ -2,7 +2,7 @@
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ArticleCard from '../../components/ArticleCard.astro';
-import { CATEGORIES, getCategoryLabel, type CategorySlug } from '../../lib/categories';
+import { CATEGORIES, getCategoryLabel, duongDanAnhBia, type CategorySlug } from '../../lib/categories';
 import { getAllArticles, slugifyTag } from '../../lib/tags';
 
 export async function getStaticPaths() {
@@ -27,7 +27,8 @@ export async function getStaticPaths() {
 const { category } = Astro.params as { category: CategorySlug };
 const { article } = Astro.props;
 const { Content } = await render(article);
-const { title, date, source, sourceUrl, summary, tags } = article.data;
+const { title, date, source, sourceUrl, summary, tags, cover } = article.data;
+const anhBia = duongDanAnhBia(category, article.id, cover);
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const jsonLd = {
@@ -61,6 +62,7 @@ const related = (await getAllArticles())
 <BaseLayout title={title} description={summary} type="article" publishedTime={date}>
 	<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} slot="head" />
 	<a class="back" href={`/${category}/`}>← {getCategoryLabel(category)}</a>
+	<img class="article-cover" src={anhBia} alt={`Ảnh bìa: ${title}`} width="1200" height="630" />
 	<h1>{title}</h1>
 	<p class="article-meta">{date.toLocaleDateString('vi-VN')} · {source}</p>
 	<div class="article-content">
@@ -93,6 +95,7 @@ const related = (await getAllArticles())
 							date={a.data.date}
 							source={a.data.source}
 							summary={a.data.summary}
+							cover={a.data.cover}
 						/>
 					))}
 				</div>

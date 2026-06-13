@@ -1,5 +1,5 @@
 ---
-import { getCategoryLabel } from '../lib/categories';
+import { getCategoryLabel, duongDanAnhBia } from '../lib/categories';
 
 interface Props {
 	id: string;
@@ -8,17 +8,24 @@ interface Props {
 	date: Date;
 	source: string;
 	summary: string;
+	cover?: string;
 }
 
-const { id, category, title, date, source, summary } = Astro.props;
+const { id, category, title, date, source, summary, cover } = Astro.props;
+const anhBia = duongDanAnhBia(category, id, cover);
 ---
 
 <a class="card" href={`/${category}/${id}/`}>
-	<span class={`badge ${category}`}>{getCategoryLabel(category)}</span>
-	<h2>{title}</h2>
-	<p class="summary">{summary}</p>
-	<div class="meta">
-		<time datetime={date.toISOString()}>{date.toLocaleDateString('vi-VN')}</time>
-		<span> · {source}</span>
+	<div class="card-cover">
+		<img src={anhBia} alt="" loading="lazy" />
+	</div>
+	<div class="card-body">
+		<span class={`badge ${category}`}>{getCategoryLabel(category)}</span>
+		<h2>{title}</h2>
+		<p class="summary">{summary}</p>
+		<div class="meta">
+			<time datetime={date.toISOString()}>{date.toLocaleDateString('vi-VN')}</time>
+			<span> · {source}</span>
+		</div>
 	</div>
 </a>

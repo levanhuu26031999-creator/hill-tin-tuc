@@ -8,6 +8,7 @@ const articleSchema = z.object({
 	sourceUrl: z.string().url(),
 	summary: z.string(),
 	tags: z.array(z.string()).optional(),
+	cover: z.string().optional(),
 });
 
 const articleCollection = (dir: string) =>

@@ -1,0 +1,18 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<linearGradient id="nen" x1="0" y1="0" x2="1" y2="1">
+			<stop offset="0" stop-color="#ea580c"/>
+			<stop offset="0.55" stop-color="#0c2742"/>
+			<stop offset="1" stop-color="#0c2742"/>
+		</linearGradient>
+	</defs>
+	<rect width="1200" height="630" fill="url(#nen)"/>
+	<circle cx="1080" cy="120" r="280" fill="#ea580c" opacity="0.18"/>
+	<circle cx="1180" cy="560" r="180" fill="#ffffff" opacity="0.05"/>
+	<rect x="80" y="80" rx="999" width="209" height="48" fill="rgba(255,255,255,0.16)"/>
+	<text x="108" y="112" font-family="'Be Vietnam Pro', Arial, sans-serif" font-size="24" font-weight="700" fill="#ffffff" letter-spacing="1">MARKETING</text>
+	<text font-family="'Be Vietnam Pro', Arial, sans-serif" font-size="52" font-weight="800" fill="#ffffff" letter-spacing="-0.5"><tspan x="80" y="267">5 xu hướng marketing sẽ</tspan><tspan x="80" y="333">chiếm sóng nửa cuối 2026</tspan></text>
+	<circle cx="92" cy="556" r="12" fill="#ea580c"/>
+	<text x="116" y="566" font-family="'Be Vietnam Pro', Arial, sans-serif" font-size="30" font-weight="800" fill="#ffffff">Hill Tin Tức</text>
+	<text x="1120" y="566" text-anchor="end" font-family="'Be Vietnam Pro', Arial, sans-serif" font-size="22" fill="rgba(255,255,255,0.7)">hill-tin-tuc.vercel.app</text>
+</svg>

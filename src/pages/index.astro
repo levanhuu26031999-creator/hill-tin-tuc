@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import PromoBanner from '../components/PromoBanner.astro';
-import { CATEGORIES, getCategoryLabel } from '../lib/categories';
+import { CATEGORIES, getCategoryLabel, duongDanAnhBia } from '../lib/categories';
 import { getAllArticles } from '../lib/tags';
 
 const allArticles = (await getAllArticles()).sort(
@@ -22,16 +22,26 @@ const tagline = CATEGORIES.map((cat) => cat.label).join(' · ');
 		) : (
 			<>
 				<a class="featured" href={`/${featured.category}/${featured.id}/`}>
-					<span class={`badge ${featured.category}`}>{getCategoryLabel(featured.category)}</span>
-					<h2>{featured.data.title}</h2>
-					<p class="summary">{featured.data.summary}</p>
-					<div class="meta">
-						<time datetime={featured.data.date.toISOString()}>
-							{featured.data.date.toLocaleDateString('vi-VN')}
-						</time>
-						<span> · {featured.data.source}</span>
+					<div class="featured-cover">
+						<img
+							src={duongDanAnhBia(featured.category, featured.id, featured.data.cover)}
+							alt=""
+							width="1200"
+							height="630"
+						/>
 					</div>
-					<span class="read-more">Đọc tiếp →</span>
+					<div class="featured-body">
+						<span class={`badge ${featured.category}`}>{getCategoryLabel(featured.category)}</span>
+						<h2>{featured.data.title}</h2>
+						<p class="summary">{featured.data.summary}</p>
+						<div class="meta">
+							<time datetime={featured.data.date.toISOString()}>
+								{featured.data.date.toLocaleDateString('vi-VN')}
+							</time>
+							<span> · {featured.data.source}</span>
+						</div>
+						<span class="read-more">Đọc tiếp →</span>
+					</div>
 				</a>
 
 				<PromoBanner />
@@ -48,6 +58,7 @@ const tagline = CATEGORIES.map((cat) => cat.label).join(' · ');
 									date={article.data.date}
 									source={article.data.source}
 									summary={article.data.summary}
+									cover={article.data.cover}
 								/>
 							))}
 						</div>
