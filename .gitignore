@@ -22,3 +22,7 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Ảnh gốc do anh Hửu cung cấp — giữ làm file gốc, KHÔNG commit (3.5MB).
+# avatar.png (đã resize) mới là ảnh dùng trên site.
+public/Logo.png
