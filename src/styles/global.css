@@ -466,6 +466,105 @@ h1 {
 	}
 }
 
+/* Lưu trữ */
+.loc-ngay {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.6rem;
+	margin: 0 0 2rem;
+	padding: 1rem 1.25rem;
+	background: var(--color-card-bg);
+	border: 1px solid var(--color-border);
+	border-radius: 12px;
+}
+
+.loc-ngay label {
+	font-weight: 600;
+	font-size: 0.92rem;
+}
+
+.loc-ngay input[type='date'] {
+	padding: 0.45rem 0.65rem;
+	border-radius: 8px;
+	border: 1px solid var(--color-border);
+	background: var(--color-bg);
+	color: var(--color-text);
+	font-size: 0.9rem;
+	font-family: inherit;
+}
+
+.loc-ngay button {
+	padding: 0.45rem 1rem;
+	border-radius: 8px;
+	border: none;
+	background: var(--color-accent);
+	color: #fff;
+	font-weight: 600;
+	font-size: 0.9rem;
+	cursor: pointer;
+}
+
+.loc-ngay #nut-xoa {
+	background: transparent;
+	color: var(--color-muted);
+	border: 1px solid var(--color-border);
+}
+
+.khong-co {
+	color: var(--color-muted);
+	font-style: italic;
+}
+
+.nhom-thang {
+	margin-bottom: 2rem;
+}
+
+.thang-heading {
+	font-size: 1.05rem;
+	font-weight: 700;
+	color: var(--color-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	border-bottom: 1px solid var(--color-border);
+	padding-bottom: 0.5rem;
+	margin: 0 0 0.85rem;
+}
+
+.ds-luu-tru {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+}
+
+.dong-bai a {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.6rem;
+	text-decoration: none;
+	color: var(--color-text);
+}
+
+.dong-bai a:hover .dong-tieu-de {
+	color: var(--color-accent);
+}
+
+.dong-tieu-de {
+	font-weight: 600;
+	line-height: 1.4;
+}
+
+.dong-ngay {
+	display: block;
+	font-size: 0.8rem;
+	color: var(--color-muted);
+	margin-top: 0.15rem;
+	margin-left: 0.1rem;
+}
+
 /* Article page */
 .article-cover {
 	width: 100%;

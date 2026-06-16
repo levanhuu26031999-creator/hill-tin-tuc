@@ -1,0 +1,112 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import {
+	getCategoryLabel,
+	dinhDangNgayDayDu,
+	khoaThang,
+	khoaNgay,
+} from '../lib/categories';
+import { getAllArticles } from '../lib/tags';
+
+const articles = (await getAllArticles()).sort(
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+// Nhóm bài theo tháng (mới nhất trước)
+type Nhom = { khoa: string; nhan: string; bai: typeof articles };
+const nhomTheoThang: Nhom[] = [];
+for (const bai of articles) {
+	const khoa = khoaThang(bai.data.date);
+	const nhan = `Tháng ${bai.data.date.getMonth() + 1}/${bai.data.date.getFullYear()}`;
+	let nhom = nhomTheoThang.find((n) => n.khoa === khoa);
+	if (!nhom) {
+		nhom = { khoa, nhan, bai: [] };
+		nhomTheoThang.push(nhom);
+	}
+	nhom.bai.push(bai);
+}
+---
+
+<BaseLayout
+	title="Lưu trữ"
+	description="Xem lại toàn bộ bài viết cũ của Hill Tin Tức, sắp theo thời gian. Lọc bài theo ngày đăng."
+>
+	<h1>Lưu trữ bài viết</h1>
+	<p class="tagline">Toàn bộ {articles.length} bài, sắp theo thời gian. Chọn một ngày để xem bài đăng ngày đó.</p>
+
+	<div class="loc-ngay">
+		<label for="ngay-loc">Tìm bài theo ngày:</label>
+		<input type="date" id="ngay-loc" />
+		<button type="button" id="nut-loc">Xem</button>
+		<button type="button" id="nut-xoa" hidden>Xóa lọc</button>
+	</div>
+
+	<p id="khong-co" class="khong-co" hidden>Không có bài nào đăng vào ngày này.</p>
+
+	{
+		nhomTheoThang.map((nhom) => (
+			<section class="nhom-thang" data-thang={nhom.khoa}>
+				<h2 class="thang-heading">{nhom.nhan}</h2>
+				<ul class="ds-luu-tru">
+					{nhom.bai.map((bai) => (
+						<li class="dong-bai" data-ngay={khoaNgay(bai.data.date)}>
+							<a href={`/${bai.category}/${bai.id}/`}>
+								<span class={`badge ${bai.category}`}>{getCategoryLabel(bai.category)}</span>
+								<span class="dong-tieu-de">{bai.data.title}</span>
+							</a>
+							<time datetime={bai.data.date.toISOString()} class="dong-ngay">
+								{dinhDangNgayDayDu(bai.data.date)}
+							</time>
+						</li>
+					))}
+				</ul>
+			</section>
+		))
+	}
+
+	<script is:inline>
+		(function () {
+			var input = document.getElementById('ngay-loc');
+			var nutLoc = document.getElementById('nut-loc');
+			var nutXoa = document.getElementById('nut-xoa');
+			var khongCo = document.getElementById('khong-co');
+
+			function loc() {
+				var ngay = input.value; // dạng YYYY-MM-DD
+				if (!ngay) {
+					xoaLoc();
+					return;
+				}
+				var coBai = false;
+				document.querySelectorAll('.dong-bai').forEach(function (dong) {
+					var khop = dong.getAttribute('data-ngay') === ngay;
+					dong.hidden = !khop;
+					if (khop) coBai = true;
+				});
+				// Ẩn nhóm tháng không còn bài hiện
+				document.querySelectorAll('.nhom-thang').forEach(function (nhom) {
+					var con = nhom.querySelectorAll('.dong-bai:not([hidden])').length;
+					nhom.hidden = con === 0;
+				});
+				khongCo.hidden = coBai;
+				nutXoa.hidden = false;
+			}
+
+			function xoaLoc() {
+				input.value = '';
+				document.querySelectorAll('.dong-bai').forEach(function (d) {
+					d.hidden = false;
+				});
+				document.querySelectorAll('.nhom-thang').forEach(function (n) {
+					n.hidden = false;
+				});
+				khongCo.hidden = true;
+				nutXoa.hidden = true;
+			}
+
+			nutLoc.addEventListener('click', loc);
+			input.addEventListener('change', loc);
+			nutXoa.addEventListener('click', xoaLoc);
+		})();
+	</script>
+</BaseLayout>

@@ -2,7 +2,7 @@
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ArticleCard from '../../components/ArticleCard.astro';
-import { CATEGORIES, getCategoryLabel, duongDanAnhBia, type CategorySlug } from '../../lib/categories';
+import { CATEGORIES, getCategoryLabel, duongDanAnhBia, dinhDangNgayDayDu, type CategorySlug } from '../../lib/categories';
 import { getAllArticles, slugifyTag } from '../../lib/tags';
 
 export async function getStaticPaths() {
@@ -64,7 +64,9 @@ const related = (await getAllArticles())
 	<a class="back" href={`/${category}/`}>← {getCategoryLabel(category)}</a>
 	<img class="article-cover" src={anhBia} alt={`Ảnh bìa: ${title}`} width="1200" height="630" />
 	<h1>{title}</h1>
-	<p class="article-meta">{date.toLocaleDateString('vi-VN')} · {source}</p>
+	<p class="article-meta">
+		<time datetime={date.toISOString()}>{dinhDangNgayDayDu(date)}</time> · {source}
+	</p>
 	<div class="article-content">
 		<Content />
 	</div>
