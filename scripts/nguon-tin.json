@@ -1,0 +1,18 @@
+{
+	"_ghiChu": "Cấu hình nguồn cào tin cho Hill Tin Tức. Anh Hửu sửa file này để thêm/bớt nguồn hoặc chỉnh từ khóa phân loại. mucMacDinh dùng khi không khớp từ khóa nào.",
+	"feeds": [
+		{ "ten": "GenK", "url": "https://genk.vn/rss/home.rss", "mucMacDinh": "ai" },
+		{ "ten": "VnExpress Khoa học Công nghệ", "url": "https://vnexpress.net/rss/khoa-hoc-cong-nghe.rss", "mucMacDinh": "ai" },
+		{ "ten": "Thanh Niên Công nghệ", "url": "https://thanhnien.vn/rss/cong-nghe.rss", "mucMacDinh": "ai" },
+		{ "ten": "CafeBiz Marketing", "url": "https://cafebiz.vn/rss/marketing.rss", "mucMacDinh": "marketing" },
+		{ "ten": "CafeBiz Câu chuyện kinh doanh", "url": "https://cafebiz.vn/rss/cau-chuyen-kinh-doanh.rss", "mucMacDinh": "kinh-doanh-online" },
+		{ "ten": "VnExpress Kinh doanh", "url": "https://vnexpress.net/rss/kinh-doanh.rss", "mucMacDinh": "kinh-doanh-online" }
+	],
+	"tuKhoa": {
+		"edit-video": ["capcut", "dựng video", "dựng phim", "chỉnh sửa video", "premiere", "davinci", "video editor", "làm video", "ai video", "runway", "sora", "veo", "kỹ xảo", "after effect"],
+		"xu-huong-kenh": ["tiktok", "youtube", "youtuber", "nhà sáng tạo", "content creator", "creator", "influencer", "viral", "shorts", "reels", "livestream", "lượt xem", "follower", "kênh", "mạng xã hội", "nhà sáng tạo nội dung"],
+		"ai": ["trí tuệ nhân tạo", "chatgpt", "openai", "gemini", "chatbot", "mô hình ngôn ngữ", "machine learning", "deepseek", "nvidia", "claude", "anthropic", " ai ", "ai tạo sinh", "tự động hóa"],
+		"marketing": ["marketing", "quảng cáo", "thương hiệu", "branding", "chiến dịch", "truyền thông", "seo", "viral marketing", "tiếp thị"],
+		"kinh-doanh-online": ["khởi nghiệp", "thương mại điện tử", "bán hàng online", "shopee", "lazada", "tiki", "startup", "kinh doanh online", "doanh thu", "sàn tmđt"]
+	}
+}

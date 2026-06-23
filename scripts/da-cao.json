@@ -1,0 +1,10 @@
+{
+	"_ghiChu": "Sổ ghi link bài đã cào & đăng, để chống đăng trùng. Agent tự thêm link sau khi đăng (node scripts/cao-tin.mjs --danh-dau <link...>).",
+	"daCao": [
+		"https://cafebiz.vn/mot-buc-anh-ai-khien-65000-nguoi-thuy-dien-mac-lua-cuoc-truy-tim-bat-ngo-dan-toi-bi-mat-o-viet-nam-176260610085537205.chn",
+		"https://vnexpress.net/cach-steve-jobs-bien-lenh-cam-mac-thanh-chien-luoc-tiep-thi-5086799.html",
+		"https://cafebiz.vn/youtube-tang-toc-o-thi-truong-viet-nam-so-kenh-co-doanh-thu-tren-1-ty-dong-tang-35-trong-1-nam-ty-suat-hoan-von-cao-gap-29-lan-tivi-176250912214121143.chn",
+		"https://cafebiz.vn/kol-koc-livestream-ban-hang-tai-nha-may-chot-ngan-don-moi-ngay-176241225153039761.chn",
+		"https://thanhnien.vn/nguoi-dung-chatgpt-bat-ngo-nhan-trai-nghiem-khac-la-185260621104029899.htm"
+	]
+}

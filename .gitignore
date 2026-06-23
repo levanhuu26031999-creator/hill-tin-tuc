@@ -26,3 +26,8 @@ pnpm-debug.log*
 # Ảnh gốc do anh Hửu cung cấp — giữ làm file gốc, KHÔNG commit (3.5MB).
 # avatar.png (đã resize) mới là ảnh dùng trên site.
 public/Logo.png
+
+# Pool tin cào ra mỗi lần chạy — tạm thời, sinh lại được. KHÔNG commit.
+# (Sổ da-cao.json thì PHẢI commit để giữ trạng thái chống trùng.)
+scripts/tin-moi.json
+scripts/bai-*.json
