@@ -1,0 +1,45 @@
+name: Cào tin tự động
+
+# Chạy trên cloud GitHub — KHÔNG cần mở app, KHÔNG cần duyệt quyền.
+# Thứ 2 & Thứ 5 lúc 6h sáng giờ VN (= 23h UTC Chủ nhật & Thứ tư).
+on:
+  schedule:
+    - cron: '0 23 * * 0,3'
+  workflow_dispatch: {} # cho phép bấm "Run workflow" chạy tay để thử
+
+permissions:
+  contents: write # cần quyền push bài mới về repo
+
+jobs:
+  cao-va-dang:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lấy mã nguồn
+        uses: actions/checkout@v4
+
+      - name: Cài Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Cài phụ thuộc
+        run: npm ci
+
+      - name: Cào + viết + tạo bài
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          HILL_MODEL: ${{ vars.HILL_MODEL }}   # tùy chọn: đặt Variable HILL_MODEL để đổi model
+          HILL_SO_BAI: ${{ vars.HILL_SO_BAI }} # tùy chọn: đổi số bài mỗi lần
+        run: node scripts/dang-tu-dong.mjs
+
+      - name: Commit & push bài mới
+        run: |
+          git config user.name "Hill Bot"
+          git config user.email "bot@hillmedia68.com"
+          git add src/content public/covers scripts/da-cao.json
+          if git diff --cached --quiet; then
+            echo "Không có bài mới để đăng lần này."
+          else
+            git commit -m "Tự động: bài mới $(date -u +%d/%m/%Y)"
+            git push
+          fi
