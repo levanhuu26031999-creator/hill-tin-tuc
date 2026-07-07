@@ -27,7 +27,7 @@ jobs:
 
       - name: Cào + viết + tạo bài
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }} # lấy free ở aistudio.google.com
           HILL_MODEL: ${{ vars.HILL_MODEL }}   # tùy chọn: đặt Variable HILL_MODEL để đổi model
           HILL_SO_BAI: ${{ vars.HILL_SO_BAI }} # tùy chọn: đổi số bài mỗi lần
         run: node scripts/dang-tu-dong.mjs

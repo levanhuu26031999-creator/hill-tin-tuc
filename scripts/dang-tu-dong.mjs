@@ -1,29 +1,31 @@
 // Pipeline đăng bài tự động cho Hill Tin Tức — chạy trên GitHub Actions (cloud).
 // Không cần mở app, không cần duyệt quyền: cào RSS → chọn bài → đọc nguồn lấy
-// dữ kiện → gọi Claude viết lại 100% giọng kênh (có checklist bản quyền) →
-// tạo file .md + ảnh bìa → cập nhật sổ chống trùng. Việc git commit/push do
+// dữ kiện → gọi Google Gemini viết lại 100% giọng kênh (có checklist bản quyền)
+// → tạo file .md + ảnh bìa → cập nhật sổ chống trùng. Việc git commit/push do
 // workflow lo (xem .github/workflows/cao-tin.yml).
 //
+// Dùng Gemini vì có gói MIỄN PHÍ (lấy key ở aistudio.google.com, không cần thẻ).
+//
 // Biến môi trường:
-//   ANTHROPIC_API_KEY  (bắt buộc) — khóa API Anthropic, đặt trong GitHub Secrets
-//   HILL_MODEL         (tùy chọn) — model, mặc định claude-opus-4-8
-//   HILL_SO_BAI        (tùy chọn) — số bài mỗi lần, mặc định 5
+//   GEMINI_API_KEY  (bắt buộc) — khóa API Google Gemini, đặt trong GitHub Secrets
+//   HILL_MODEL      (tùy chọn) — model, mặc định gemini-2.5-flash (free)
+//   HILL_SO_BAI     (tùy chọn) — số bài mỗi lần, mặc định 5
 
 import { execSync } from 'node:child_process';
 import { readFileSync, writeFileSync, unlinkSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import Anthropic from '@anthropic-ai/sdk';
+import { GoogleGenAI } from '@google/genai';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const gooc = join(here, '..');
 
-const MODEL = process.env.HILL_MODEL || 'claude-opus-4-8';
+const MODEL = process.env.HILL_MODEL || 'gemini-2.5-flash';
 const SO_BAI = Number(process.env.HILL_SO_BAI || 5);
 const MUC_HOP_LE = ['ai', 'marketing', 'edit-video', 'kinh-doanh-online', 'xu-huong-kenh'];
 
-if (!process.env.ANTHROPIC_API_KEY) {
-	console.error('❌ Thiếu ANTHROPIC_API_KEY. Đặt trong GitHub Secrets hoặc export khi chạy tay.');
+if (!process.env.GEMINI_API_KEY) {
+	console.error('❌ Thiếu GEMINI_API_KEY. Lấy free ở aistudio.google.com rồi đặt trong GitHub Secrets.');
 	process.exit(1);
 }
 
@@ -95,18 +97,18 @@ function chonBai(pool) {
 	return chon;
 }
 
-// --- Schema JSON bắt buộc cho bài viết ---
+// --- Schema JSON bắt buộc cho bài viết (định dạng Gemini) ---
 const SCHEMA = {
-	type: 'object',
+	type: 'OBJECT',
 	properties: {
-		category: { type: 'string', enum: MUC_HOP_LE },
-		title: { type: 'string' },
-		summary: { type: 'string' },
-		tags: { type: 'array', items: { type: 'string' } },
-		body: { type: 'string' },
+		category: { type: 'STRING', enum: MUC_HOP_LE },
+		title: { type: 'STRING' },
+		summary: { type: 'STRING' },
+		tags: { type: 'ARRAY', items: { type: 'STRING' } },
+		body: { type: 'STRING' },
 	},
 	required: ['category', 'title', 'summary', 'tags', 'body'],
-	additionalProperties: false,
+	propertyOrdering: ['category', 'title', 'summary', 'tags', 'body'],
 };
 
 const HE_THONG = `Bạn là biên tập viên của "Hill Tin Tức" — trang tin của anh Lê Văn Hửu (Hill Media), phục vụ người Việt quan tâm AI, Marketing, Edit Video, Kinh doanh online, Xu hướng kênh.
@@ -121,22 +123,21 @@ QUY TẮC BẮT BUỘC:
 - category: chọn đúng 1 trong: ${MUC_HOP_LE.join(', ')} theo nội dung thực tế.
 Trả về đúng JSON theo schema.`;
 
-async function vietBai(client, item, duKien) {
-	const res = await client.messages.create({
+async function vietBai(ai, item, duKien) {
+	const res = await ai.models.generateContent({
 		model: MODEL,
-		max_tokens: 4000,
-		system: HE_THONG,
-		output_config: { format: { type: 'json_schema', schema: SCHEMA } },
-		messages: [
-			{
-				role: 'user',
-				content: `Nguồn: ${item.nguon}\nChuyên mục gợi ý: ${item.mucGoiY}\nTiêu đề gốc (chỉ tham khảo, không copy): ${item.tieuDe}\n\nDỮ KIỆN THÔ (chỉ lấy sự kiện/số liệu, viết lại hoàn toàn):\n${duKien}`,
-			},
-		],
+		contents: `Nguồn: ${item.nguon}\nChuyên mục gợi ý: ${item.mucGoiY}\nTiêu đề gốc (chỉ tham khảo, không copy): ${item.tieuDe}\n\nDỮ KIỆN THÔ (chỉ lấy sự kiện/số liệu, viết lại hoàn toàn):\n${duKien}`,
+		config: {
+			systemInstruction: HE_THONG,
+			responseMimeType: 'application/json',
+			responseSchema: SCHEMA,
+			temperature: 0.85,
+			maxOutputTokens: 4000,
+		},
 	});
-	const khoiText = res.content.find((b) => b.type === 'text');
-	if (!khoiText) throw new Error('Không có nội dung trả về');
-	return JSON.parse(khoiText.text);
+	const text = res.text;
+	if (!text) throw new Error('Không có nội dung trả về');
+	return JSON.parse(text);
 }
 
 // --- Chạy chính ---
@@ -154,7 +155,7 @@ async function chinh() {
 	const chon = chonBai(pool);
 	console.log(`Chọn ${chon.length} bài để viết.`);
 
-	const client = new Anthropic();
+	const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 	const daDang = [];
 	let stt = 0;
 
@@ -162,7 +163,7 @@ async function chinh() {
 		stt++;
 		try {
 			const duKien = await layDuKien(item);
-			const bai = await vietBai(client, item, duKien);
+			const bai = await vietBai(ai, item, duKien);
 
 			if (!MUC_HOP_LE.includes(bai.category)) bai.category = item.mucGoiY;
 			const trung = timTrung(bai.body, duKien);
